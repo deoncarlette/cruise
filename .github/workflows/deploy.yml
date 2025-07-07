@@ -26,23 +26,40 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
       - name: Replace secrets in config.js
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
         run: |
-          # Debug: Check if secrets are available
-          echo "Replacing placeholders in config.js..."
-          echo "SUPABASE_URL length: ${#SUPABASE_URL}"
-          echo "SUPABASE_ANON_KEY length: ${#SUPABASE_ANON_KEY}"
+          # Create a Node.js script to replace the values
+          cat > replace-config.js << 'EOF'
+          const fs = require('fs');
           
-          # Use environment variables with proper escaping
-          sed -i "s|'REPLACE_SUPABASE_URL'|'${SUPABASE_URL}'|g" config.js
-          sed -i "s|'REPLACE_SUPABASE_ANON_KEY'|'${SUPABASE_ANON_KEY}'|g" config.js
+          console.log('Reading config.js...');
+          let config = fs.readFileSync('config.js', 'utf8');
           
-          # Verify replacement worked
-          echo "Checking if replacement was successful..."
-          grep -n "REPLACE_" config.js || echo "No placeholders found - replacement successful!"
+          console.log('Original config.js content:');
+          console.log(config.substring(0, 300) + '...');
+          
+          // Replace the placeholders
+          config = config.replace('REPLACE_SUPABASE_URL', process.env.SUPABASE_URL);
+          config = config.replace('REPLACE_SUPABASE_ANON_KEY', process.env.SUPABASE_ANON_KEY);
+          
+          console.log('After replacement:');
+          console.log(config.substring(0, 300) + '...');
+          
+          // Write back to file
+          fs.writeFileSync('config.js', config);
+          console.log('Config.js updated successfully!');
+          EOF
+          
+          # Run the replacement script
+          node replace-config.js
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
