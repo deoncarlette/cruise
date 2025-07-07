@@ -14,8 +14,9 @@ jobs:
 
       - name: Replace secrets in config.js
         run: |
-          sed -i "s/REPLACE_SUPABASE_URL/${{ secrets.SUPABASE_URL }}/g" config.js
-          sed -i "s/REPLACE_SUPABASE_ANON_KEY/${{ secrets.SUPABASE_ANON_KEY }}/g" config.js
+          # Use different delimiter for sed to avoid conflicts with URLs
+          sed -i "s|REPLACE_SUPABASE_URL|${{ secrets.SUPABASE_URL }}|g" config.js
+          sed -i "s|REPLACE_SUPABASE_ANON_KEY|${{ secrets.SUPABASE_ANON_KEY }}|g" config.js
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
