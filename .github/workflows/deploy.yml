@@ -27,10 +27,22 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Replace secrets in config.js
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
         run: |
-          # Use different delimiter for sed to avoid conflicts with URLs
-          sed -i "s|REPLACE_SUPABASE_URL|${{ secrets.SUPABASE_URL }}|g" config.js
-          sed -i "s|REPLACE_SUPABASE_ANON_KEY|${{ secrets.SUPABASE_ANON_KEY }}|g" config.js
+          # Debug: Check if secrets are available
+          echo "Replacing placeholders in config.js..."
+          echo "SUPABASE_URL length: ${#SUPABASE_URL}"
+          echo "SUPABASE_ANON_KEY length: ${#SUPABASE_ANON_KEY}"
+          
+          # Use environment variables with proper escaping
+          sed -i "s|'REPLACE_SUPABASE_URL'|'${SUPABASE_URL}'|g" config.js
+          sed -i "s|'REPLACE_SUPABASE_ANON_KEY'|'${SUPABASE_ANON_KEY}'|g" config.js
+          
+          # Verify replacement worked
+          echo "Checking if replacement was successful..."
+          grep -n "REPLACE_" config.js || echo "No placeholders found - replacement successful!"
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
