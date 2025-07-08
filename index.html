@@ -354,6 +354,27 @@
   </section>
 </div>
 
-<script src="script.js"></script>
+<!-- Load config and script at the end, ensuring proper order -->
+<script>
+  // Dynamically load config, then script
+  function loadScript(src) {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = src;
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+  }
+
+  // Load config first, then the main script
+  loadScript('config.js')
+    .then(() => loadScript('script.js'))
+    .catch(error => {
+      console.error('Failed to load scripts:', error);
+      // Fallback: load script anyway, it has fallback config
+      loadScript('script.js');
+    });
+</script>
 </body>
 </html>
