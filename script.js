@@ -89,6 +89,7 @@ function initializeCruiseApp() {
   let profiles = [];
   let myProfile = JSON.parse(localStorage.getItem(STORAGE_KEY_MY_PROFILE) || 'null');
   let supabaseChannel = null;
+  let currentSection = 'home';
 
   // Supabase Functions
   async function saveProfileToSupabase(profile) {
@@ -230,6 +231,7 @@ function initializeCruiseApp() {
       await initializeSupabase();
       loadMyProfile();
       startCountdownTimer();
+      showSection(homeSection); // Ensure home section is shown
     } else {
       showLoginError();
     }
@@ -264,6 +266,7 @@ function initializeCruiseApp() {
       await initializeSupabase();
       loadMyProfile();
       startCountdownTimer();
+      showSection(homeSection); // Ensure home section is shown
     }
   }
 
@@ -280,6 +283,21 @@ function initializeCruiseApp() {
   }
 
   // Navigation Functions
+  function updateNavActiveState(activeButton) {
+    const navButtons = [navHome, navInfo, navSchedule, navContacts, navProfile];
+    navButtons.forEach(button => {
+      if (button) {
+        button.classList.remove('active', 'cruise-blue-text', 'font-bold');
+        button.style.color = ''; // Reset inline styles
+        button.style.fontWeight = '';
+      }
+    });
+
+    if (activeButton) {
+      activeButton.classList.add('active', 'cruise-blue-text', 'font-bold');
+    }
+  }
+
   function showSection(targetSection) {
     if (!targetSection) return;
 
@@ -291,6 +309,25 @@ function initializeCruiseApp() {
 
     targetSection.classList.remove('hidden');
 
+    // Update navigation active state
+    if (targetSection === homeSection) {
+      updateNavActiveState(navHome);
+      currentSection = 'home';
+    } else if (targetSection === infoSection) {
+      updateNavActiveState(navInfo);
+      currentSection = 'info';
+    } else if (targetSection === scheduleSection) {
+      updateNavActiveState(navSchedule);
+      currentSection = 'schedule';
+    } else if (targetSection === contactsSection) {
+      updateNavActiveState(navContacts);
+      currentSection = 'contacts';
+    } else if (targetSection === profileSection) {
+      updateNavActiveState(navProfile);
+      currentSection = 'profile';
+    }
+
+    // Hide mobile nav on section change
     if (window.innerWidth < 768 && navContent) {
       navContent.classList.add('hidden');
     }
@@ -559,11 +596,13 @@ function initializeCruiseApp() {
     initializeTheme();
     initializeAvatars();
     initializeEventListeners();
+
+    // Set initial active state for home
+    updateNavActiveState(navHome);
+
     checkPreviousLogin();
   }
 
-  // Start the app
-  init();
 }
 
 // Wait for DOM to be ready

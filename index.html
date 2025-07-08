@@ -7,10 +7,12 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <!-- Load config first -->
+  <script src="config.js"></script>
 </head>
 <body class="bg-gray-50 text-gray-900">
 <!-- Login Screen -->
-<div id="login-screen" class="min-h-screen flex flex-col items-center justify-center p-4 hidden">
+<div id="login-screen" class="min-h-screen flex flex-col items-center justify-center p-4">
   <div class="bg-white rounded-xl shadow-lg p-6 sm:p-8 max-w-md w-full">
     <div class="text-center mb-6 sm:mb-8">
       <h1 class="text-2xl sm:text-3xl font-bold cruise-blue-text">Birthday DIVAS Cruise</h1>
@@ -30,7 +32,7 @@
 </div>
 
 <!-- Main Content -->
-<div id="main-content" class="">
+<div id="main-content" class="hidden">
   <!-- Header with Countdown -->
   <header id="site-header" class="text-white header-gradient-light">
     <div class="container mx-auto px-4 py-8 md:py-12 flex flex-col items-center text-center">

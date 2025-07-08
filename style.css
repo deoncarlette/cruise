@@ -28,6 +28,33 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
+/* Navigation Active States */
+.nav-link.active {
+    color: #149EC6 !important;
+    font-weight: 600;
+}
+
+.nav-link {
+    transition: color 0.2s ease;
+    position: relative;
+}
+
+.nav-link:hover {
+    color: #149EC6;
+}
+
+.nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 2px;
+    background-color: #149EC6;
+    border-radius: 1px;
+}
+
 /* Dark Mode Styles */
 html.dark {
     color-scheme: dark;
@@ -91,6 +118,42 @@ html.dark .nav-bar {
     }
     .mobile-nav.active {
         transform: translateX(0);
+    }
+
+    #nav-content {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border-top: 1px solid #e5e7eb;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        z-index: 50;
+    }
+
+    html.dark #nav-content {
+        background: #252541;
+        border-top-color: #3a3a5a;
+    }
+
+    #nav-content ul {
+        flex-direction: column;
+        padding: 1rem 0;
+    }
+
+    #nav-content li {
+        margin: 0;
+        padding: 0 1rem;
+    }
+
+    #nav-content .nav-link {
+        display: block;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+    html.dark #nav-content .nav-link {
+        border-bottom-color: #374151;
     }
 }
 
@@ -206,4 +269,16 @@ input:focus, textarea:focus {
     color: #10b981;
     font-size: 0.875rem;
     margin-top: 0.25rem;
+}
+
+/* Smooth transitions for section changes */
+section {
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Fix for mobile menu button alignment */
+@media (max-width: 768px) {
+    .md\:hidden {
+        display: flex !important;
+    }
 }
