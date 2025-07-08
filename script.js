@@ -1,20 +1,22 @@
-// Standalone version - config embedded directly
+// Simple version - uses config.js (created differently for local vs production)
 function initializeCruiseApp() {
-  console.log('Initializing cruise app (standalone version)...');
+  console.log('Initializing cruise app...');
 
-  // Embedded configuration - no external config.js needed
-  const CONFIG = {
-    CRUISE_PASSWORD: "divas2025",
-    CRUISE_DATE: new Date("October 6, 2025 15:30:00"),
-    SUPABASE_URL: 'REPLACE_SUPABASE_URL',
-    SUPABASE_ANON_KEY: 'REPLACE_SUPABASE_ANON_KEY'
-  };
+  // Check if config is available
+  if (!window.CRUISE_CONFIG) {
+    console.error('Configuration not loaded - window.CRUISE_CONFIG is undefined');
+    console.log('Make sure config.js is loaded before this script');
+    return;
+  }
+
+  console.log('Configuration loaded successfully');
 
   // Get configuration
-  const CRUISE_PASSWORD = CONFIG.CRUISE_PASSWORD;
-  const CRUISE_DATE = CONFIG.CRUISE_DATE;
-  const SUPABASE_URL = CONFIG.SUPABASE_URL;
-  const SUPABASE_ANON_KEY = CONFIG.SUPABASE_ANON_KEY;
+  const config = window.CRUISE_CONFIG;
+  const CRUISE_PASSWORD = config.CRUISE_PASSWORD;
+  const CRUISE_DATE = config.CRUISE_DATE;
+  const SUPABASE_URL = config.SUPABASE_URL;
+  const SUPABASE_ANON_KEY = config.SUPABASE_ANON_KEY;
 
   console.log('Using password:', CRUISE_PASSWORD);
   console.log('Using cruise date:', CRUISE_DATE);
@@ -22,28 +24,34 @@ function initializeCruiseApp() {
   // Initialize Supabase client only if credentials are available
   let supabase = null;
   if (SUPABASE_URL && SUPABASE_ANON_KEY &&
-    SUPABASE_URL !== 'REPLACE_SUPABASE_URL' &&
-    SUPABASE_ANON_KEY !== 'REPLACE_SUPABASE_ANON_KEY') {
-    supabase = window.supabase?.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    console.log('Supabase initialized');
+    SUPABASE_URL !== 'YOUR_SUPABASE_URL_HERE' &&
+    SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY_HERE') {
+
+    // Load Supabase from CDN if not already loaded
+    if (!window.supabase) {
+      console.log('Loading Supabase from CDN...');
+      const script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+      script.onload = () => {
+        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        console.log('Supabase initialized from CDN');
+      };
+      document.head.appendChild(script);
+    } else {
+      supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      console.log('Supabase initialized');
+    }
   } else {
     console.log('Supabase not initialized - using localStorage only');
   }
 
-  // DOM Elements - Check if they exist before using
+  // DOM Elements
   const loginScreen = document.getElementById('login-screen');
   const mainContent = document.getElementById('main-content');
   const loginBtn = document.getElementById('login-btn');
   const logoutBtn = document.getElementById('logout-btn');
   const passwordInput = document.getElementById('password');
   const loginError = document.getElementById('login-error');
-
-  console.log('DOM elements found:', {
-    loginScreen: !!loginScreen,
-    mainContent: !!mainContent,
-    loginBtn: !!loginBtn,
-    passwordInput: !!passwordInput
-  });
 
   // Navigation elements
   const navToggle = document.getElementById('nav-toggle');
@@ -247,7 +255,6 @@ function initializeCruiseApp() {
     const enteredPassword = passwordInput.value;
     console.log('Entered password:', enteredPassword);
     console.log('Expected password:', CRUISE_PASSWORD);
-    console.log('Passwords match:', enteredPassword === CRUISE_PASSWORD);
 
     if (enteredPassword === CRUISE_PASSWORD) {
       console.log('Password correct, logging in...');

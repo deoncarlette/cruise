@@ -3,72 +3,38 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [ main ]
-
-# Set permissions for GitHub token
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-# Allow only one concurrent deployment
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
+  pull_request:
+    branches: [ main ]
 
 jobs:
   deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
-      - name: Replace secrets in config.js
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+      - name: Create config.js from secrets
         run: |
-          # Create a Node.js script to replace the values
-          cat > replace-config.js << 'EOF'
-          const fs = require('fs');
-          
-          console.log('Reading config.js...');
-          let config = fs.readFileSync('config.js', 'utf8');
-          
-          console.log('Original config.js content:');
-          console.log(config.substring(0, 300) + '...');
-          
-          // Replace the placeholders
-          config = config.replace('REPLACE_SUPABASE_URL', process.env.SUPABASE_URL);
-          config = config.replace('REPLACE_SUPABASE_ANON_KEY', process.env.SUPABASE_ANON_KEY);
-          
-          console.log('After replacement:');
-          console.log(config.substring(0, 300) + '...');
-          
-          // Write back to file
-          fs.writeFileSync('config.js', config);
-          console.log('Config.js updated successfully!');
+          cat > config.js << EOF
+          const CONFIG = {
+            SUPABASE_URL: '${{ secrets.SUPABASE_URL }}',
+            SUPABASE_ANON_KEY: '${{ secrets.SUPABASE_ANON_KEY }}',
+            CRUISE_PASSWORD: "divas2025",
+            CRUISE_DATE: new Date("October 6, 2025 15:30:00")
+          };
+          window.CRUISE_CONFIG = CONFIG;
           EOF
-          
-          # Run the replacement script
-          node replace-config.js
 
       - name: Setup Pages
-        uses: actions/configure-pages@v4
+        uses: actions/configure-pages@v3
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v2
         with:
-          path: ./
+          path: '.'
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v2
+
+# Enable GitHub Pages in your repo settings and set source to "GitHub Actions"
