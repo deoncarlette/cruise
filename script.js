@@ -1,17 +1,23 @@
-// Wait for both DOM and config to be ready
+// Standalone version - config embedded directly
 function initializeCruiseApp() {
-  // Check if config is available
-  if (!window.CRUISE_CONFIG) {
-    console.error('Configuration not loaded');
-    return;
-  }
+  console.log('Initializing cruise app (standalone version)...');
 
-  // Get configuration from environment
-  const config = window.CRUISE_CONFIG;
-  const CRUISE_PASSWORD = config.CRUISE_PASSWORD;
-  const CRUISE_DATE = config.CRUISE_DATE;
-  const SUPABASE_URL = config.SUPABASE_URL;
-  const SUPABASE_ANON_KEY = config.SUPABASE_ANON_KEY;
+  // Embedded configuration - no external config.js needed
+  const CONFIG = {
+    CRUISE_PASSWORD: "divas2025",
+    CRUISE_DATE: new Date("October 6, 2025 15:30:00"),
+    SUPABASE_URL: 'REPLACE_SUPABASE_URL',
+    SUPABASE_ANON_KEY: 'REPLACE_SUPABASE_ANON_KEY'
+  };
+
+  // Get configuration
+  const CRUISE_PASSWORD = CONFIG.CRUISE_PASSWORD;
+  const CRUISE_DATE = CONFIG.CRUISE_DATE;
+  const SUPABASE_URL = CONFIG.SUPABASE_URL;
+  const SUPABASE_ANON_KEY = CONFIG.SUPABASE_ANON_KEY;
+
+  console.log('Using password:', CRUISE_PASSWORD);
+  console.log('Using cruise date:', CRUISE_DATE);
 
   // Initialize Supabase client only if credentials are available
   let supabase = null;
@@ -19,6 +25,9 @@ function initializeCruiseApp() {
     SUPABASE_URL !== 'REPLACE_SUPABASE_URL' &&
     SUPABASE_ANON_KEY !== 'REPLACE_SUPABASE_ANON_KEY') {
     supabase = window.supabase?.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    console.log('Supabase initialized');
+  } else {
+    console.log('Supabase not initialized - using localStorage only');
   }
 
   // DOM Elements - Check if they exist before using
@@ -28,6 +37,13 @@ function initializeCruiseApp() {
   const logoutBtn = document.getElementById('logout-btn');
   const passwordInput = document.getElementById('password');
   const loginError = document.getElementById('login-error');
+
+  console.log('DOM elements found:', {
+    loginScreen: !!loginScreen,
+    mainContent: !!mainContent,
+    loginBtn: !!loginBtn,
+    passwordInput: !!passwordInput
+  });
 
   // Navigation elements
   const navToggle = document.getElementById('nav-toggle');
@@ -221,9 +237,21 @@ function initializeCruiseApp() {
 
   // Authentication Functions
   async function handleLogin() {
-    if (!passwordInput || !loginScreen || !mainContent) return;
+    console.log('Login button clicked');
 
-    if (passwordInput.value === CRUISE_PASSWORD) {
+    if (!passwordInput || !loginScreen || !mainContent) {
+      console.error('Required elements not found for login');
+      return;
+    }
+
+    const enteredPassword = passwordInput.value;
+    console.log('Entered password:', enteredPassword);
+    console.log('Expected password:', CRUISE_PASSWORD);
+    console.log('Passwords match:', enteredPassword === CRUISE_PASSWORD);
+
+    if (enteredPassword === CRUISE_PASSWORD) {
+      console.log('Password correct, logging in...');
+
       loginScreen.classList.add('hidden');
       mainContent.classList.remove('hidden');
       localStorage.setItem(STORAGE_KEY_LOGIN, 'true');
@@ -231,8 +259,11 @@ function initializeCruiseApp() {
       await initializeSupabase();
       loadMyProfile();
       startCountdownTimer();
-      showSection(homeSection); // Ensure home section is shown
+      showSection(homeSection);
+
+      console.log('Login successful');
     } else {
+      console.log('Password incorrect, showing error');
       showLoginError();
     }
   }
@@ -260,13 +291,18 @@ function initializeCruiseApp() {
 
   async function checkPreviousLogin() {
     const wasLoggedIn = localStorage.getItem(STORAGE_KEY_LOGIN);
+    console.log('Previous login status:', wasLoggedIn);
+
     if (wasLoggedIn === 'true') {
+      console.log('User was previously logged in, skipping login screen');
       if (loginScreen) loginScreen.classList.add('hidden');
       if (mainContent) mainContent.classList.remove('hidden');
       await initializeSupabase();
       loadMyProfile();
       startCountdownTimer();
-      showSection(homeSection); // Ensure home section is shown
+      showSection(homeSection);
+    } else {
+      console.log('User not previously logged in, showing login screen');
     }
   }
 
@@ -288,7 +324,7 @@ function initializeCruiseApp() {
     navButtons.forEach(button => {
       if (button) {
         button.classList.remove('active', 'cruise-blue-text', 'font-bold');
-        button.style.color = ''; // Reset inline styles
+        button.style.color = '';
         button.style.fontWeight = '';
       }
     });
@@ -536,12 +572,21 @@ function initializeCruiseApp() {
 
   // Event Listeners
   function initializeEventListeners() {
+    console.log('Initializing event listeners...');
+
     // Authentication
-    if (loginBtn) loginBtn.addEventListener('click', handleLogin);
+    if (loginBtn) {
+      console.log('Adding login button event listener');
+      loginBtn.addEventListener('click', handleLogin);
+    } else {
+      console.error('Login button not found');
+    }
+
     if (logoutBtn) logoutBtn.addEventListener('click', handleLogout);
     if (passwordInput) {
       passwordInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
+          console.log('Enter key pressed in password field');
           handleLogin();
         }
       });
@@ -589,10 +634,13 @@ function initializeCruiseApp() {
       if (cabinField) cabinField.name = 'cabin';
       if (bioField) bioField.name = 'bio';
     }
+
+    console.log('Event listeners initialized');
   }
 
   // Initialize everything
   function init() {
+    console.log('Starting initialization...');
     initializeTheme();
     initializeAvatars();
     initializeEventListeners();
@@ -601,14 +649,22 @@ function initializeCruiseApp() {
     updateNavActiveState(navHome);
 
     checkPreviousLogin();
+    console.log('Initialization complete');
   }
 
+  // Start the app
+  init();
 }
 
 // Wait for DOM to be ready
+console.log('Script loaded, waiting for DOM...');
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initializeCruiseApp);
+  document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded, initializing app...');
+    initializeCruiseApp();
+  });
 } else {
   // DOM is already ready
+  console.log('DOM already ready, initializing app...');
   initializeCruiseApp();
 }
