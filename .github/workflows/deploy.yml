@@ -47,10 +47,18 @@ jobs:
       - name: Verify output
         run: tree .
 
-      - name: Prepare final output
+      - name: Make output folder
+        run: mkdir -p ./dist
+
+      - name: Copy source files to dist
+        run: cp index.html script.js style.css ./dist/
+
+      - name: Overwrite config.js in dist
         run: |
-          mkdir -p ./dist
-          cp index.html script.js style.css config.js ./dist/
+          cat > ./dist/config.js << EOF
+          const CONFIG = { ... };
+          window.CRUISE_CONFIG = CONFIG;
+          EOF
 
       - name: Verify output
         run: tree ./dist
