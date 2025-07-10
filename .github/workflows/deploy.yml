@@ -26,19 +26,33 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Create config.js from secrets
+#      - name: Create config.js from secrets
+#        run: |
+#          cat > config.js << EOF
+#          // config.js - Generated during deployment
+#          const CONFIG = {
+#            SUPABASE_URL: '${{ secrets.SUPABASE_URL }}',
+#            SUPABASE_ANON_KEY: '${{ secrets.SUPABASE_ANON_KEY }}',
+#            CRUISE_PASSWORD: '${{ secrets.CRUISE_PASSWORD }}',
+#            CRUISE_DATE: new Date("October 6, 2025 15:30:00")
+#          };
+#
+#          // Make config available globally
+#          window.CRUISE_CONFIG = CONFIG;
+#          EOF
+
+      - name: Create config.js
         run: |
-          cat > config.js << EOF
-          // config.js - Generated during deployment
+          cat > ./public/config.js << EOF
           const CONFIG = {
             SUPABASE_URL: '${{ secrets.SUPABASE_URL }}',
             SUPABASE_ANON_KEY: '${{ secrets.SUPABASE_ANON_KEY }}',
             CRUISE_PASSWORD: '${{ secrets.CRUISE_PASSWORD }}',
             CRUISE_DATE: new Date("October 6, 2025 15:30:00")
           };
-          
-          // Make config available globally
           window.CRUISE_CONFIG = CONFIG;
+          console.log(CONFIG);
+          console.log(window.CRUISE_CONFIG);
           EOF
 
       - name: List files after generating config.js
@@ -47,12 +61,10 @@ jobs:
       - name: Make output folder
         run: mkdir -p ./public
 
-      - name: Create config.js
-        run: |
-          cat > ./public/config.js << EOF
-          const CONFIG = { ... };
-          window.CRUISE_CONFIG = CONFIG;
-          EOF
+
+
+      - name: List final deploy folder
+        run: ls -la ./public
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -62,8 +74,7 @@ jobs:
         with:
           path: './public'
 
-      - name: List final deploy folder
-        run: ls -la ./public
+
 
   # Deployment job
   deploy:
@@ -77,4 +88,7 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
         with:
-          path: './public'
+          artifact: './public'
+          branch: 'gh-pages'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: '.'
