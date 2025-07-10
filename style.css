@@ -46,10 +46,10 @@ body {
 .nav-link.active::after {
     content: '';
     position: absolute;
-    bottom: -8px;
+    bottom: 2px;
     left: 50%;
     transform: translateX(-50%);
-    width: 20px;
+    width: 30px;
     height: 2px;
     background-color: #149EC6;
     border-radius: 1px;
