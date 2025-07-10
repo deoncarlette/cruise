@@ -1,0 +1,284 @@
+/* Custom Fonts */
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Custom Colors */
+.cruise-blue {
+    background-color: #149EC6;
+}
+
+.cruise-blue-text {
+    color: #149EC6;
+}
+
+/* Header Gradients */
+.header-gradient-light {
+    background: linear-gradient(135deg, #149EC6 0%, #0d7a99 100%);
+}
+
+.header-gradient-dark {
+    background: linear-gradient(135deg, #0d7a99 0%, #065e77 100%);
+}
+
+/* Countdown Items */
+.countdown-item {
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Navigation Active States */
+.nav-link.active {
+    color: #149EC6 !important;
+    font-weight: 600;
+}
+
+.nav-link {
+    transition: color 0.2s ease;
+    position: relative;
+}
+
+.nav-link:hover {
+    color: #149EC6;
+}
+
+.nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 2px;
+    background-color: #149EC6;
+    border-radius: 1px;
+}
+
+/* Dark Mode Styles */
+html.dark {
+    color-scheme: dark;
+}
+
+html.dark body {
+    background-color: #1a1a2e;
+    color: #e1e1e1;
+}
+
+html.dark .bg-white {
+    background-color: #252541;
+}
+
+html.dark .text-gray-900 {
+    color: #e1e1e1;
+}
+
+html.dark .text-gray-700 {
+    color: #c4c4c4;
+}
+
+html.dark .text-gray-600 {
+    color: #a0a0a0;
+}
+
+html.dark .text-gray-500 {
+    color: #8a8a8a;
+}
+
+html.dark .bg-gray-50 {
+    background-color: #2a2a45;
+}
+
+html.dark .border-gray-300 {
+    border-color: #3a3a5a;
+}
+
+html.dark .bg-blue-50 {
+    background-color: rgba(20, 158, 198, 0.15);
+}
+
+html.dark .shadow-md,
+html.dark .shadow-lg {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+}
+
+html.dark .divide-gray-200 > * + * {
+    border-color: #3a3a5a;
+}
+
+html.dark .nav-bar {
+    background-color: #252541;
+}
+
+/* Mobile Navigation */
+@media (max-width: 768px) {
+    .mobile-nav {
+        transition: transform 0.3s ease-in-out;
+        transform: translateX(-100%);
+    }
+    .mobile-nav.active {
+        transform: translateX(0);
+    }
+
+    #nav-content {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border-top: 1px solid #e5e7eb;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        z-index: 50;
+    }
+
+    html.dark #nav-content {
+        background: #252541;
+        border-top-color: #3a3a5a;
+    }
+
+    #nav-content ul {
+        flex-direction: column;
+        padding: 1rem 0;
+    }
+
+    #nav-content li {
+        margin: 0;
+        padding: 0 1rem;
+    }
+
+    #nav-content .nav-link {
+        display: block;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+    html.dark #nav-content .nav-link {
+        border-bottom-color: #374151;
+    }
+}
+
+/* Custom Hover Effects */
+.nav-link:hover {
+    color: #149EC6;
+    transition: color 0.2s ease;
+}
+
+/* Profile Avatar Styles */
+#avatar-preview {
+    transition: all 0.3s ease;
+}
+
+#avatar-preview:hover {
+    transform: scale(1.05);
+}
+
+/* Countdown Animation */
+.countdown-item {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.8;
+    }
+}
+
+/* Form Focus States */
+input:focus, textarea:focus {
+    border-color: #149EC6;
+    box-shadow: 0 0 0 3px rgba(20, 158, 198, 0.1);
+}
+
+/* Button Hover Effects */
+.cruise-blue:hover {
+    background-color: #0d7a99;
+    transform: translateY(-1px);
+    transition: all 0.2s ease;
+}
+
+/* Card Hover Effects */
+.bg-white:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+/* Responsive Typography */
+@media (max-width: 640px) {
+    h1 {
+        font-size: 2rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    .countdown-item span {
+        font-size: 1rem;
+    }
+}
+
+/* Loading States */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #149EC6;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Error States */
+.error {
+    border-color: #ef4444;
+    background-color: #fef2f2;
+}
+
+.error-message {
+    color: #ef4444;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+/* Success States */
+.success {
+    border-color: #10b981;
+    background-color: #f0fdf4;
+}
+
+.success-message {
+    color: #10b981;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+/* Smooth transitions for section changes */
+section {
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Fix for mobile menu button alignment */
+@media (max-width: 768px) {
+    .md\:hidden {
+        display: flex !important;
+    }
+}
