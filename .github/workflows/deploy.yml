@@ -47,13 +47,16 @@ jobs:
       - name: Verify output
         run: tree .
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-
       - name: Prepare final output
         run: |
           mkdir -p ./dist
           cp index.html script.js style.css config.js ./dist/
+
+      - name: Verify output
+        run: tree ./dist
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
