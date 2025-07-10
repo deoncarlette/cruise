@@ -4,7 +4,6 @@ function initializeCruiseApp() {
 
   // Check if config is available
   if (!window.CRUISE_CONFIG) {
-    console.log(CONFIG);
     console.error('Configuration not loaded - window.CRUISE_CONFIG is undefined');
     console.log('Make sure config.js is loaded before this script');
     return;
