@@ -28,22 +28,18 @@ jobs:
 
       - name: Create config.js from secrets
         run: |
-          echo "Overwriting config.js..."
           cat > config.js << EOF
+          // config.js - Generated during deployment
           const CONFIG = {
             SUPABASE_URL: '${{ secrets.SUPABASE_URL }}',
             SUPABASE_ANON_KEY: '${{ secrets.SUPABASE_ANON_KEY }}',
             CRUISE_PASSWORD: '${{ secrets.CRUISE_PASSWORD }}',
             CRUISE_DATE: new Date("October 6, 2025 15:30:00")
           };
+          
+          // Make config available globally
           window.CRUISE_CONFIG = CONFIG;
           EOF
-
-      - name: Verify overwrite
-        run: cat config.js
-
-      - name: Verify output
-        run: tree .
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -51,9 +47,8 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
+          # Upload entire repository
           path: '.'
-
-
 
   # Deployment job
   deploy:
