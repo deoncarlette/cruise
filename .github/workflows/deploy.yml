@@ -16,7 +16,7 @@ permissions:
 # However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
 concurrency:
   group: "pages"
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   # Build job
@@ -41,9 +41,8 @@ jobs:
           window.CRUISE_CONFIG = CONFIG;
           EOF
 
-      - name: Copy config.js to output folder
-        run: |
-          cp config.js ./ # if you deploy the root
+      - name: List files after generating config.js
+        run: ls -la
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
