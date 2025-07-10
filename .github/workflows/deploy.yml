@@ -55,6 +55,9 @@ jobs:
           mkdir -p ./dist
           cp index.html script.js style.css config.js ./dist/
 
+      - name: Verify output
+        run: tree ./dist
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
