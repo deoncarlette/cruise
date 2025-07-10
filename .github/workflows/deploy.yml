@@ -44,14 +44,23 @@ jobs:
       - name: List files after generating config.js
         run: ls -la
 
+      - name: Make output folder
+        run: mkdir -p ./public
+
+      - name: Create config.js
+        run: |
+          cat > ./public/config.js << EOF
+          const CONFIG = { ... };
+          window.CRUISE_CONFIG = CONFIG;
+          EOF
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Upload entire repository
-          path: '.'
+          path: './public'
 
   # Deployment job
   deploy:
