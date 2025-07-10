@@ -36,19 +36,31 @@ jobs:
             CRUISE_PASSWORD: '${{ secrets.CRUISE_PASSWORD }}',
             CRUISE_DATE: new Date("October 6, 2025 15:30:00")
           };
-          
+
           // Make config available globally
           window.CRUISE_CONFIG = CONFIG;
           EOF
 
+      - name: Force add generated config.js
+        run: git add config.js || echo "Nothing to commit"
+
+      - name: Verify output
+        run: tree .
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
+
+      - name: Prepare final output
+        run: |
+          mkdir -p ./dist
+          cp index.html script.js style.css config.js ./dist/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Upload entire repository
-          path: '.'
+          path: './dist'
+
+
 
   # Deployment job
   deploy:
