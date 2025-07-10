@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
@@ -20,9 +20,15 @@ jobs:
 
       - name: Generate config.js with API key
         run: |
-          echo "const SUPABASE_URL = '${{ secrets.SUPABASE_URL }}';" > config.js
-          echo "const SUPABASE_ANON_KEY = '${{ secrets.SUPABASE_ANON_KEY }}';" > config.js
-          echo "console.log('config.js generated with API key');"
+          cat > config.js << EOF
+          const CONFIG = {
+            SUPABASE_URL: '${{ secrets.SUPABASE_URL }}',
+            SUPABASE_ANON_KEY: '${{ secrets.SUPABASE_ANON_KEY }}',
+            CRUISE_PASSWORD: "divas2025",
+            CRUISE_DATE: new Date("October 6, 2025 15:30:00")
+          };
+          window.CRUISE_CONFIG = CONFIG;
+          EOF
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
