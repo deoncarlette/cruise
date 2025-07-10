@@ -20,8 +20,8 @@ jobs:
 
       - name: Generate config.js with API key
         run: |
-          echo "const SUPABASE_URL = '${{ secrets.SUPABASE_URL }}';" > src/config.js
-          echo "const SUPABASE_ANON_KEY = '${{ secrets.SUPABASE_ANON_KEY }}';" > src/config.js
+          echo "const SUPABASE_URL = '${{ secrets.SUPABASE_URL }}';" > config.js
+          echo "const SUPABASE_ANON_KEY = '${{ secrets.SUPABASE_ANON_KEY }}';" > config.js
           echo "console.log('config.js generated with API key');"
 
       - name: Deploy to GitHub Pages
