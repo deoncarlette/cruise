@@ -50,10 +50,15 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
+      - name: Prepare final output
+        run: |
+          mkdir -p ./dist
+          cp index.html script.js style.css config.js ./dist/
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: './dist'
 
 
 
