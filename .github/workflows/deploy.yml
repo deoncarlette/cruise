@@ -41,6 +41,9 @@ jobs:
           window.CRUISE_CONFIG = CONFIG;
           EOF
 
+      - name: Force add generated config.js
+        run: git add config.js || echo "Nothing to commit"
+
       - name: Verify output
         run: tree .
 
