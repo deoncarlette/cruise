@@ -51,8 +51,6 @@ jobs:
             CRUISE_DATE: new Date("October 6, 2025 15:30:00")
           };
           window.CRUISE_CONFIG = CONFIG;
-          console.log(CONFIG);
-          console.log(window.CRUISE_CONFIG);
           EOF
 
       - name: List files after generating config.js
@@ -65,6 +63,9 @@ jobs:
 
       - name: List final deploy folder
         run: ls -la ./public
+
+      - name: Verify output
+        run: tree ./public
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -87,8 +88,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-        with:
-          artifact: './public'
-          branch: 'gh-pages'
-          token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: '.'
