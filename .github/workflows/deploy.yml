@@ -41,10 +41,6 @@ jobs:
           window.CRUISE_CONFIG = CONFIG;
           EOF
 
-      - name: Copy config.js to output folder
-        run: |
-          cp config.js ./ # if you deploy the root
-
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
